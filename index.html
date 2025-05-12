@@ -13,7 +13,7 @@
      padding: 0;
    }
    h1 {
-     margin: 100px 0;
+     margin: 30px 0;
      font-size: 36px;
    }
    .clock-container {
@@ -24,7 +24,7 @@
      padding: 20px;
    }
    .clock {
-     background: #222;
+     background: rgb(0, 0, 255);
      padding: 20px 30px;
      border-radius: 12px;
      width: 200px;
@@ -36,44 +36,50 @@
      margin-bottom: 10px;
    }
    .timezone {
-     font-size: 18px;
-     color: #ccc;
+     font-size: 30px;
+     color: rgb(255, 255, 255);
      margin-bottom: 8px;
    }
    .time {
-     font-size: 24px;
-     color: rgb(0, 0, 255);
+     font-size: 50px;
+     color: rgb(255, 255, 255);
      font-weight: bold;
    }
 </style>
 </head>
 <body>
-<h1>Geodis Live Clock</h1>
+<h1>APAC TIME</h1>
 <div class="clock-container">
+
 <div class="clock">
-<img class="flag" src="https://flagcdn.com/in.svg" alt="India Flag">
-<div class="timezone">India (Bengaluru)</div>
+<!-- <img class="flag" src="https://flagcdn.com/au.svg" alt="Australia Flag"> -->
+<div class="timezone">Australia</div>
+<div class="time" id="australia-clock">--:--:--</div>
+</div>
+<div class="clock">
+<!-- <img class="flag" src="https://flagcdn.com/in.svg" alt="India Flag"> -->
+<div class="timezone">India</div>
 <div class="time" id="ist-clock">--:--:--</div>
 </div>
 <div class="clock">
-<img class="flag" src="https://flagcdn.com/fr.svg" alt="France Flag">
-<div class="timezone">France (Paris)</div>
+<!-- <img class="flag" src="https://flagcdn.com/fr.svg" alt="France Flag"> -->
+<div class="timezone">France</div>
 <div class="time" id="cet-clock">--:--:--</div>
 </div>
 <div class="clock">
-<img class="flag" src="https://flagcdn.com/vn.svg" alt="Vietnam Flag">
-<div class="timezone">Vietnam (Ho Chi Minh)</div>
+<!-- <img class="flag" src="https://flagcdn.com/vn.svg" alt="Vietnam Flag"> -->
+<div class="timezone">Vietnam</div>
 <div class="time" id="vietnam-clock">--:--:--</div>
 </div>
 <div class="clock">
-<img class="flag" src="https://flagcdn.com/cn.svg" alt="China Flag">
-<div class="timezone">China (Shenzhen)</div>
+<!-- <img class="flag" src="https://flagcdn.com/cn.svg" alt="China Flag"> -->
+<div class="timezone">CN/SG/PH/HK</div> 
 <div class="time" id="china-clock">--:--:--</div>
 </div>
 <div class="clock">
-<img class="flag" src="https://flagcdn.com/au.svg" alt="Australia Flag">
-<div class="timezone">Australia (Sydney)</div>
-<div class="time" id="australia-clock">--:--:--</div>
+<!-- <img class="flag" src="https://flagcdn.com/au.svg" alt="Australia Flag"> -->
+<div class="timezone">Japan/ South Korea</div>
+<div class="time" id="japan-clock">--:--:--</div>
 </div>
 </div>
 <script>
@@ -83,10 +89,11 @@
        return new Date(nowUTC.getTime() + offsetInHours * 60 * 60 * 1000).toLocaleTimeString();
      }
      document.getElementById("ist-clock").textContent = offsetTime(0);     // India
-     document.getElementById("cet-clock").textContent = offsetTime(3.5);       // France (CET)
+     document.getElementById("cet-clock").textContent = offsetTime(-3.5);       // France (CET)
      document.getElementById("vietnam-clock").textContent = offsetTime(1.5);   // Vietnam
      document.getElementById("china-clock").textContent = offsetTime(2.5);     // China
      document.getElementById("australia-clock").textContent = offsetTime(4.5); // Australia (Sydney)
+     document.getElementById("japan-clock").textContent = offsetTime(3.5); // Japan & South Korea
    }
    setInterval(updateClocks, 1000);
    updateClocks();
