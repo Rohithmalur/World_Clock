@@ -70,6 +70,12 @@
      opacity: 0.9;
      z-index: 1000;
    }
+   .ampm {
+    font-size: 20px;
+    color: #aaa;
+    margin-left: 4px;
+    font-weight: bold;
+   }
 </style>
 </head>
 <body>
@@ -111,23 +117,34 @@
 <div class="timezone">FRANCE</div>
 <div class="time" id="cet-clock">--:--:--</div>
 </div>
-
 </div>
+
 <script>
-   function updateClocks() {
-     const nowUTC = new Date();
-     function offsetTime(offsetInHours) {
-       return new Date(nowUTC.getTime() + offsetInHours * 60 * 60 * 1000).toLocaleTimeString();
-     }
-     document.getElementById("ist-clock").textContent = offsetTime(0);     // India
-     document.getElementById("cet-clock").textContent = offsetTime(-3.5);       // France (CET)
-     document.getElementById("vietnam-clock").textContent = offsetTime(1.5);   // Vietnam
-     document.getElementById("china-clock").textContent = offsetTime(2.5);     // China
-     document.getElementById("australia-clock").textContent = offsetTime(4.5); // Australia (Sydney)
-     document.getElementById("japan-clock").textContent = offsetTime(3.5); // Japan & South Korea
-   }
-   setInterval(updateClocks, 1000);
-   updateClocks();
+function formatTime(date) {
+ let timeStr = date.toLocaleTimeString('en-US');
+ let [time, ampm] = timeStr.split(' ');
+ return `${time} <span class="ampm">${ampm}</span>`;
+}
+function updateClocks() {
+ const nowUTC = new Date();
+ function offsetTime(offsetInHours) {
+   return new Date(nowUTC.getTime() + offsetInHours * 60 * 60 * 1000);
+ }
+ const istTime = offsetTime(0);
+ const cetTime = offsetTime(-3.5);
+ const vietnamTime = offsetTime(1.5);
+ const chinaTime = offsetTime(2.5);
+ const ausTime = offsetTime(4.5);
+ const japanTime = offsetTime(3.5);
+ document.getElementById("ist-clock").innerHTML = formatTime(istTime);
+ document.getElementById("cet-clock").innerHTML = formatTime(cetTime);
+ document.getElementById("vietnam-clock").innerHTML = formatTime(vietnamTime);
+ document.getElementById("china-clock").innerHTML = formatTime(chinaTime);
+ document.getElementById("australia-clock").innerHTML = formatTime(ausTime);
+ document.getElementById("japan-clock").innerHTML = formatTime(japanTime);
+}
+setInterval(updateClocks, 1000);
+updateClocks();
 </script>
 </body>
 </html>
