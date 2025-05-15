@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<title>Geodis Clock SCO</title>
+<title>Geodis Analog Clock</title>
 <style>
    body {
      background: #111;
@@ -13,33 +13,8 @@
      padding: 0;
    }
    h1 {
-     margin: 30px 0;
-     font-size: 36px;
-   }
-   .clock-container {
-     display: flex;
-     flex-wrap: wrap;
-     justify-content: center;
-     gap: 30px;
-     padding: 20px;
-   }
-   .clock {
-     background: #111;
-     padding: 20px 30px;
-     border-radius: 12px;
-     width: 200px;
-     box-shadow: 0 0 0px rgba(0, 0, 0, 0.4);
-   }
-   .timezone {
-     font-size: 24px;
-     color: #fff;
-     margin-bottom: 10px;
-     font-weight: bold;
-   }
-   .time {
-     font-size: 40px;
-     color: #fff;
-     font-weight: bold;
+     margin: 20px 0;
+     font-size: 30px;
    }
    .logo {
      position: fixed;
@@ -50,64 +25,140 @@
      opacity: 0.9;
      z-index: 1000;
    }
+   .clock-container {
+     display: flex;
+     flex-wrap: wrap;
+     justify-content: center;
+     gap: 30px;
+     padding: 20px;
+   }
+   .clock-box {
+     background: #222;
+     border-radius: 12px;
+     padding: 10px;
+     width: 200px;
+     text-align: center;
+     box-shadow: 0 0 10px rgba(0,0,0,0.5);
+   }
+   .timezone {
+     font-size: 18px;
+     margin-bottom: 10px;
+     font-weight: bold;
+   }
+   canvas {
+     background: #000;
+     border-radius: 50%;
+   }
+   .ampm {
+     font-size: 16px;
+     margin-top: 8px;
+     color: #ccc;
+     font-weight: bold;
+   }
 </style>
 </head>
 <body>
 <img src="https://jobnow.ng/wp-content/uploads/2023/03/Libra-Circle.png" alt="Logo" class="logo">
 <h1>WORLD CLOCK</h1>
-<div class="clock-container">
-<div class="clock">
-<div class="timezone">AUSTRALIA</div>
-<div class="time" id="australia-clock">--:--:--</div>
-</div>
-<div class="clock">
-<div class="timezone">JAPAN / S.KOREA</div>
-<div class="time" id="japan-clock">--:--:--</div>
-</div>
-<div class="clock">
-<div class="timezone">CHINA / SINGAPORE</div>
-<div class="time" id="china-clock">--:--:--</div>
-</div>
-<div class="clock">
-<div class="timezone">VIETNAM</div>
-<div class="time" id="vietnam-clock">--:--:--</div>
-</div>
-<div class="clock">
-<div class="timezone">INDIA</div>
-<div class="time" id="ist-clock">--:--:--</div>
-</div>
-<div class="clock">
-<div class="timezone">FRANCE</div>
-<div class="time" id="cet-clock">--:--:--</div>
-</div>
-</div>
+<div class="clock-container" id="clocks-container"></div>
 <script>
-   function formatTime24(date) {
-     let hours = date.getHours().toString().padStart(2, '0');
-     let minutes = date.getMinutes().toString().padStart(2, '0');
-     let seconds = date.getSeconds().toString().padStart(2, '0');
-     return `${hours}:${minutes}:${seconds}`;
-   }
-   function updateClocks() {
-     const nowUTC = new Date();
-     function offsetTime(offsetInHours) {
-       return new Date(nowUTC.getTime() + offsetInHours * 60 * 60 * 1000);
+   const timezones = [
+     { id: 'australia', label: 'AUSTRALIA', offset: 4.5 },
+     { id: 'japan', label: 'JAPAN / S.KOREA', offset: 3.5 },
+     { id: 'china', label: 'CHINA / SINGAPORE', offset: 2.5 },
+     { id: 'vietnam', label: 'VIETNAM', offset: 1.5 },
+     { id: 'india', label: 'INDIA', offset: 0 },
+     { id: 'france', label: 'FRANCE', offset: -3.5 }
+   ];
+   const container = document.getElementById("clocks-container");
+   // Create clock elements
+   timezones.forEach(zone => {
+     const clockBox = document.createElement("div");
+     clockBox.className = "clock-box";
+     clockBox.innerHTML = `
+<div class="timezone">${zone.label}</div>
+<canvas id="${zone.id}" width="150" height="150"></canvas>
+<div class="ampm" id="${zone.id}-ampm">--</div>
+     `;
+     container.appendChild(clockBox);
+   });
+   function drawClock(canvasId, offset, ampmId) {
+     const canvas = document.getElementById(canvasId);
+     const ampmDiv = document.getElementById(ampmId);
+     const ctx = canvas.getContext("2d");
+     const radius = canvas.height / 2;
+     ctx.translate(radius, radius);
+     function drawFace() {
+       ctx.beginPath();
+       ctx.arc(0, 0, radius * 0.95, 0, 2 * Math.PI);
+       ctx.fillStyle = '#000';
+       ctx.fill();
+       ctx.strokeStyle = '#fff';
+       ctx.lineWidth = 4;
+       ctx.stroke();
+       ctx.beginPath();
+       ctx.arc(0, 0, 5, 0, 2 * Math.PI);
+       ctx.fillStyle = '#fff';
+       ctx.fill();
      }
-     const istTime = offsetTime(0);
-     const cetTime = offsetTime(-3.5);
-     const vietnamTime = offsetTime(1.5);
-     const chinaTime = offsetTime(2.5);
-     const ausTime = offsetTime(4.5);
-     const japanTime = offsetTime(3.5);
-     document.getElementById("ist-clock").innerText = formatTime24(istTime);
-     document.getElementById("cet-clock").innerText = formatTime24(cetTime);
-     document.getElementById("vietnam-clock").innerText = formatTime24(vietnamTime);
-     document.getElementById("china-clock").innerText = formatTime24(chinaTime);
-     document.getElementById("australia-clock").innerText = formatTime24(ausTime);
-     document.getElementById("japan-clock").innerText = formatTime24(japanTime);
+     function drawNumbers() {
+       ctx.font = radius * 0.15 + "px arial";
+       ctx.fillStyle = "#fff";
+       ctx.textBaseline = "middle";
+       ctx.textAlign = "center";
+       for (let num = 1; num <= 12; num++) {
+         let angle = num * Math.PI / 6;
+         ctx.rotate(angle);
+         ctx.translate(0, -radius * 0.8);
+         ctx.rotate(-angle);
+         ctx.fillText(num.toString(), 0, 0);
+         ctx.rotate(angle);
+         ctx.translate(0, radius * 0.8);
+         ctx.rotate(-angle);
+       }
+     }
+     function drawTime() {
+       const nowUTC = new Date();
+       const local = new Date(nowUTC.getTime() + offset * 60 * 60 * 1000);
+       let hour = local.getHours();
+       let minute = local.getMinutes();
+       let second = local.getSeconds();
+       // Update AM/PM
+       const ampm = hour >= 12 ? "PM" : "AM";
+       ampmDiv.innerText = ampm;
+       // Clock hands
+       hour = hour % 12;
+       hour = (hour * Math.PI / 6) + (minute * Math.PI / (6 * 60));
+       drawHand(hour, radius * 0.5, 6);
+       minute = (minute * Math.PI / 30) + (second * Math.PI / (30 * 60));
+       drawHand(minute, radius * 0.75, 4);
+       second = (second * Math.PI / 30);
+       drawHand(second, radius * 0.85, 2, '#f00');
+     }
+     function drawHand(pos, length, width, color = '#fff') {
+       ctx.beginPath();
+       ctx.lineWidth = width;
+       ctx.lineCap = "round";
+       ctx.strokeStyle = color;
+       ctx.moveTo(0, 0);
+       ctx.rotate(pos);
+       ctx.lineTo(0, -length);
+       ctx.stroke();
+       ctx.rotate(-pos);
+     }
+     function renderClock() {
+       ctx.clearRect(-radius, -radius, canvas.width, canvas.height);
+       drawFace();
+       drawNumbers();
+       drawTime();
+     }
+     setInterval(renderClock, 1000);
+     renderClock();
    }
-   setInterval(updateClocks, 1000);
-   updateClocks();
+   // Initialize each clock with AM/PM display
+   timezones.forEach(zone => {
+     drawClock(zone.id, zone.offset, `${zone.id}-ampm`);
+   });
 </script>
 </body>
 </html>
