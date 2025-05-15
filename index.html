@@ -3,21 +3,6 @@
 <head>
 <meta charset="UTF-8" />
 <title>Geodis Clock SCO</title>
-<body>
-  <img src="https://jobnow.ng/wp-content/uploads/2023/03/Libra-Circle.png" alt="Logo" class="logo">
-  <!-- existing clock code here -->
-  <style>
-     .logo {
-       position: fixed;
-       top: 20px;
-       left: 20px;
-       width: 50px;
-       height: auto;
-       opacity: 0.9;
-       z-index: 1000;
-     }
-  </style>
-  </body>
 <style>
    body {
      background: #111;
@@ -45,20 +30,15 @@
      width: 200px;
      box-shadow: 0 0 0px rgba(0, 0, 0, 0.4);
    }
-   .flag {
-     width: 40px;
-     height: 28px;
-     margin-bottom: 10px;
-   }
    .timezone {
-     font-size: 40px;
-     color: rgb(255, 255, 255);
-     margin-bottom: 8px;
+     font-size: 24px;
+     color: #fff;
+     margin-bottom: 10px;
      font-weight: bold;
    }
    .time {
-     font-size: 50px;
-     color: rgb(255, 255, 255);
+     font-size: 40px;
+     color: #fff;
      font-weight: bold;
    }
    .logo {
@@ -70,81 +50,64 @@
      opacity: 0.9;
      z-index: 1000;
    }
-   .ampm {
-    font-size: 20px;
-    color: #aaa;
-    margin-left: 4px;
-    font-weight: bold;
-   }
 </style>
 </head>
 <body>
+<img src="https://jobnow.ng/wp-content/uploads/2023/03/Libra-Circle.png" alt="Logo" class="logo">
 <h1>WORLD CLOCK</h1>
 <div class="clock-container">
-
 <div class="clock">
-<!--<img class="flag" src="https://flagcdn.com/au.svg" alt="Australia Flag"> -->
 <div class="timezone">AUSTRALIA</div>
 <div class="time" id="australia-clock">--:--:--</div>
 </div>
-
 <div class="clock">
-<!-- <img class="flag" src="https://flagcdn.com/au.svg" alt="Australia Flag"> -->
 <div class="timezone">JAPAN / S.KOREA</div>
 <div class="time" id="japan-clock">--:--:--</div>
 </div>
-
 <div class="clock">
-<!-- <img class="flag" src="https://flagcdn.com/cn.svg" alt="China Flag"> -->
-<div class="timezone">CHINA / SINGAPORE</div> 
+<div class="timezone">CHINA / SINGAPORE</div>
 <div class="time" id="china-clock">--:--:--</div>
 </div>
-
 <div class="clock">
-<!-- <img class="flag" src="https://flagcdn.com/vn.svg" alt="Vietnam Flag"> -->
 <div class="timezone">VIETNAM</div>
 <div class="time" id="vietnam-clock">--:--:--</div>
 </div>
-
 <div class="clock">
-<!-- <img class="flag" src="https://flagcdn.com/in.svg" alt="India Flag"> -->
 <div class="timezone">INDIA</div>
 <div class="time" id="ist-clock">--:--:--</div>
 </div>
-
 <div class="clock">
-<!-- <img class="flag" src="https://flagcdn.com/fr.svg" alt="France Flag"> -->
 <div class="timezone">FRANCE</div>
 <div class="time" id="cet-clock">--:--:--</div>
 </div>
 </div>
-
 <script>
-function formatTime(date) {
- let timeStr = date.toLocaleTimeString('en-US');
- let [time, ampm] = timeStr.split(' ');
- return `${time} <span class="ampm">${ampm}</span>`;
-}
-function updateClocks() {
- const nowUTC = new Date();
- function offsetTime(offsetInHours) {
-   return new Date(nowUTC.getTime() + offsetInHours * 60 * 60 * 1000);
- }
- const istTime = offsetTime(0);
- const cetTime = offsetTime(-3.5);
- const vietnamTime = offsetTime(1.5);
- const chinaTime = offsetTime(2.5);
- const ausTime = offsetTime(4.5);
- const japanTime = offsetTime(3.5);
- document.getElementById("ist-clock").innerHTML = formatTime(istTime);
- document.getElementById("cet-clock").innerHTML = formatTime(cetTime);
- document.getElementById("vietnam-clock").innerHTML = formatTime(vietnamTime);
- document.getElementById("china-clock").innerHTML = formatTime(chinaTime);
- document.getElementById("australia-clock").innerHTML = formatTime(ausTime);
- document.getElementById("japan-clock").innerHTML = formatTime(japanTime);
-}
-setInterval(updateClocks, 1000);
-updateClocks();
+   function formatTime24(date) {
+     let hours = date.getHours().toString().padStart(2, '0');
+     let minutes = date.getMinutes().toString().padStart(2, '0');
+     let seconds = date.getSeconds().toString().padStart(2, '0');
+     return `${hours}:${minutes}:${seconds}`;
+   }
+   function updateClocks() {
+     const nowUTC = new Date();
+     function offsetTime(offsetInHours) {
+       return new Date(nowUTC.getTime() + offsetInHours * 60 * 60 * 1000);
+     }
+     const istTime = offsetTime(0);
+     const cetTime = offsetTime(-3.5);
+     const vietnamTime = offsetTime(1.5);
+     const chinaTime = offsetTime(2.5);
+     const ausTime = offsetTime(4.5);
+     const japanTime = offsetTime(3.5);
+     document.getElementById("ist-clock").innerText = formatTime24(istTime);
+     document.getElementById("cet-clock").innerText = formatTime24(cetTime);
+     document.getElementById("vietnam-clock").innerText = formatTime24(vietnamTime);
+     document.getElementById("china-clock").innerText = formatTime24(chinaTime);
+     document.getElementById("australia-clock").innerText = formatTime24(ausTime);
+     document.getElementById("japan-clock").innerText = formatTime24(japanTime);
+   }
+   setInterval(updateClocks, 1000);
+   updateClocks();
 </script>
 </body>
 </html>
